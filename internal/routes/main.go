@@ -9,16 +9,19 @@ import (
 func RegisterRoutes(r *gin.Engine, userService *services.UserService) {
 	api := r.Group("/api")
 	{
-		api.GET("/user/:name", func(c *gin.Context) {
+		api.GET("/user", func(c *gin.Context) {
+			handlers.GetUsers(c, userService)
+		})
+		api.GET("/user/:id", func(c *gin.Context) {
 			handlers.GetUser(c, userService)
 		})
-		api.PUT("/user/:name", func(c *gin.Context) {
+		api.PUT("/user/:id", func(c *gin.Context) {
 			handlers.UpdateUser(c, userService)
 		})
 		api.POST("/user", func(c *gin.Context) {
 			handlers.CreateUser(c, userService)
 		})
-		api.DELETE("/user/:name", func(c *gin.Context) {
+		api.DELETE("/user/:id", func(c *gin.Context) {
 			handlers.DeleteUser(c, userService)
 		})
 	}

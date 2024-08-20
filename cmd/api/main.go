@@ -23,7 +23,7 @@ func main() {
 	port := viper.GetString("server.port")
 	r := gin.Default()
 
-	userService := services.NewUserService()
+	userService := services.NewUserService("")
 	routes.RegisterRoutes(r, userService)
 	r.Run(":" + port)
 }

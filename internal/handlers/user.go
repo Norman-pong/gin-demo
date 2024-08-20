@@ -9,13 +9,26 @@ import (
 )
 
 func GetUser(c *gin.Context, userService *services.UserService) {
-	name := c.Param("name")
-	user, err := userService.GetUserByName(name)
+	cid := c.Param("id")
+	user, err := userService.GetUserById(cid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, user)
+}
+
+func GetUsers(c *gin.Context, userService *services.UserService) {
+	users, err := userService.GetUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if len(users) == 0 {
+		c.JSON(http.StatusNoContent, []models.User{})
+		return
+	}
+	c.JSON(http.StatusOK, users)
 }
 
 func CreateUser(c *gin.Context, userService *services.UserService) {
@@ -33,8 +46,8 @@ func CreateUser(c *gin.Context, userService *services.UserService) {
 }
 
 func DeleteUser(c *gin.Context, userService *services.UserService) {
-	name := c.Param("name")
-	if err := userService.DeleteUser(name); err != nil {
+	cid := c.Param("id")
+	if _, err := userService.DeleteUser(cid); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
@@ -42,13 +55,13 @@ func DeleteUser(c *gin.Context, userService *services.UserService) {
 }
 
 func UpdateUser(c *gin.Context, userService *services.UserService) {
-	name := c.Param("name")
+	cid := c.Param("id")
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	updatedUser, err := userService.UpdateUser(name, user.Email)
+	updatedUser, err := userService.UpdateUser(cid, user.Email)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
