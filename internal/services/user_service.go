@@ -2,10 +2,7 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"sync"
-
-	"zhiming.cool/go/pkg/utils" // Add this line to import the package containing GenerateRandomString
 )
 
 type User struct {
@@ -25,13 +22,6 @@ func NewUserService() *UserService {
 }
 
 func (s *UserService) GetUserByName(name string) (*User, error) {
-	str, err := utils.GenerateRandomString(2)
-
-	if(err != nil){
-		return nil, errors.New("error generating random string")
-	}
-	fmt.Printf("Random string: %s\n", str)
-
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
