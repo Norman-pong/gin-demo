@@ -3,25 +3,22 @@ package services
 import (
 	"errors"
 	"sync"
-)
 
-type User struct {
-	Name  string
-	Email string
-}
+	"zhiming.cool/go/internal/models"
+)
 
 type UserService struct {
 	mu    sync.Mutex
-	users map[string]*User
+	users map[string]*models.User
 }
 
 func NewUserService() *UserService {
 	return &UserService{
-		users: make(map[string]*User),
+		users: make(map[string]*models.User),
 	}
 }
 
-func (s *UserService) GetUserByName(name string) (*User, error) {
+func (s *UserService) GetUserByName(name string) (*models.User, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -32,7 +29,7 @@ func (s *UserService) GetUserByName(name string) (*User, error) {
 	return user, nil
 }
 
-func (s *UserService) CreateUser(name, email string) (*User, error) {
+func (s *UserService) CreateUser(name, email string) (*models.User, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -40,7 +37,7 @@ func (s *UserService) CreateUser(name, email string) (*User, error) {
 		return nil, errors.New("user already exists")
 	}
 
-	user := &User{
+	user := &models.User{
 		Name:  name,
 		Email: email,
 	}
@@ -60,7 +57,7 @@ func (s *UserService) DeleteUser(name string) error {
 	return nil
 }
 
-func (s *UserService) UpdateUser(name, email string) (*User, error) {
+func (s *UserService) UpdateUser(name, email string) (*models.User, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
